@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use PHPOpenSourceSaver\JWTAuth\JWTAuth;
 use Illuminate\Support\Str;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AuthController extends Controller
 {
@@ -19,15 +21,14 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth.refresh', ['only' => ['refresh']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'refresh']]);
     }
 
     public function register(Request $request)
     {
         $fields = $request->validate([
-            'first_name' => ['required', 'max:255'],
-            'last_name' => ['required', 'max:255'],
-            'gender' => ['required', 'regex:(^((MALE)|(FEMALE))$)'],
+            'name' => ['required', 'max:255'],
             'email' => ['required', 'email', 'unique:users'],
             'phone_number' => ['required', 'regex:(^9639[0-9]{8}$)', 'unique:users'],
             'password' => ['required', 'min:8']
@@ -40,6 +41,7 @@ class AuthController extends Controller
         $fields['password'] = Hash::make($fields['password']);
         $user = User::create($fields);
         $user->assignRole($role['role']);
+
         return response()->json('', 201);
     }
 
@@ -59,18 +61,8 @@ class AuthController extends Controller
         }
 
         $user = User::with('roles')->where('email', '=', $credentials['email'])->first();
-        $token = auth()->claims(['role' => $user->roles[0]->name])->tokenById($user->id);
+        $token = auth('api')->claims(['role' => $user->roles[0]->name])->tokenById($user->id);
         return $this->respondWithToken($token, $user->roles[0]->name);
-    }
-
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function me()
-    {
-        return response()->json(auth()->user());
     }
 
     /**
@@ -80,9 +72,13 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        auth('api')->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    public function refresh() {
+        return $this->createNewToken(auth('api')->refresh());
     }
 
     /**
@@ -90,10 +86,28 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function refresh()
-    {
-        return $this->respondWithToken(auth()->refresh());
-    }
+    // public function refresh()
+    // {
+        // return $this->respondWithToken(auth('api'));
+        // try {
+        //     $token = $this->auth->parseToken()->refresh();
+        // } catch (JWTException $e) {
+        //     return response()->json($e);
+        //     throw new UnauthorizedHttpException('jwt-auth', $e->getMessage(), $e, $e->getCode());
+        // }
+
+        // try {
+        //     $payload = auth('api')->payload();
+        //     $token = auth('api')->refresh();
+        //     $user = User::with('roles')->find($payload['sub']);
+        //     return $this->respondWithToken($token, $user->roles[0]->name);
+        // } catch (\PHPOpenSourceSaver\JWTAuth\Exceptions\TokenExpiredException $th) {
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'Token expired'
+        //     ]);
+        // }
+    // }
 
     /**
      * Get the token array structure.
@@ -102,14 +116,14 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token, $role)
+    protected function respondWithToken($token, $role = 'User')
     {
 
         return response()->json([
             'access_token' => $token,
             'role' => $role,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
+            'expires_in' => auth('api')->factory()->getTTL(),
         ]);
     }
 }

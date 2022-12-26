@@ -26,3 +26,7 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+<x-validation-scripts></x-validation-scripts>
+@endsection
