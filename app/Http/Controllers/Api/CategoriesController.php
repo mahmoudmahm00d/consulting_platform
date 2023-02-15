@@ -11,8 +11,9 @@ class CategoriesController extends Controller
     {
         $categories = Category::all()->skip(($page - 1) * $count)->take($count);
         return response()->json([
-            'message' => 'success',
+            'status' => 'success',
+            'code' => 200,
             'data' => $categories
-        ], 200);
+        ]);
     }
 }
