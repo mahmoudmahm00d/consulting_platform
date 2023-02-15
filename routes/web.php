@@ -1,11 +1,9 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ContactInfoController;
 use App\Http\Controllers\ContactInfoTypeController;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
-use App\Models\ContactInfoType;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +17,10 @@ Route::resource('categories', CategoryController::class);
 Route::resource('contactInfoTypes', ContactInfoTypeController::class);
 
 // Users
-Route::get('users', [Controller::class, 'index']);
+Route::controller(UsersController::class)->group(function () {
+    Route::get('users', 'index')->name('users.index');
+    Route::get('users/{id}/transaction', 'transaction')->name('users.transaction');
+    Route::post('users/{id}/deposit', 'deposit')->name('users.deposit');
+});
 
 Auth::routes();
