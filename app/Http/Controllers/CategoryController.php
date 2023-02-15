@@ -30,6 +30,7 @@ class CategoryController extends Controller
     {
         $fields = $request->validate([
             'name' => ['required', 'max:255', 'unique:categories'],
+            'sequence' => 'numeric',
             'image' => ['nullable', 'max:255']
         ]);
 
@@ -72,7 +73,7 @@ class CategoryController extends Controller
 
         $fields = $request->validate([
             'name' => ['required', 'max:255'],
-            'image' => ['nullable', 'max:255']
+            'sequence' => 'numeric',
         ]);
 
         if ($request->hasFile('image')) {
