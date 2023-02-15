@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->string('name');
             $table->string('description')->nullable();
+            $table->float('price');
             $table->text('certificate')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
@@ -33,7 +34,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::create('specializes', function (Blueprint $table) {
+        Schema::table('specializes', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropForeign(['category_id']);
         });

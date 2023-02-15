@@ -13,12 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('schedules', function (Blueprint $table) {
+        Schema::create('wallets', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->smallInteger('day');
-            $table->time('from');
-            $table->time('to');
+            $table->float('amount');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
@@ -31,10 +29,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('schedules', function (Blueprint $table) {
+        Schema::table('wallets', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
         });
 
-        Schema::dropIfExists('schedules');
+        Schema::dropIfExists('wallets');
     }
 };
