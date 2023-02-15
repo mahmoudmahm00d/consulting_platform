@@ -28,6 +28,7 @@
                     <ul class="navbar-nav me-auto">
                         <a class="nav-link" href="{{ url('/categories') }}">{{ __('Categories') }}</a>
                         <a class="nav-link" href="{{ url('/contactInfoTypes') }}">{{ __('Contact Info Types') }}</a>
+                        <a class="nav-link" href="{{ url('/users') }}">{{ __('Users') }}</a>
                     </ul>
                     @endrole
 
