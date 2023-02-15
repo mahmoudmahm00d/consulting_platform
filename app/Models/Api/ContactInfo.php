@@ -15,6 +15,11 @@ class ContactInfo extends ModelsContactInfo
         'updated_at',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(SpecialistUser::class, 'user_id');
+    }
+
     public function type()
     {
         return $this->belongsTo(ContactInfoType::class);

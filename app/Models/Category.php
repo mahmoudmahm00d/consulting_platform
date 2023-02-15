@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Api\SpecialistUser;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
@@ -22,5 +23,10 @@ class Category extends Model
     public function specializes()
     {
         return $this->hasMany(Specialize::class);
+    }
+
+    public function specialists()
+    {
+        return $this->belongsToMany(SpecialistUser::class, 'specializes');
     }
 }

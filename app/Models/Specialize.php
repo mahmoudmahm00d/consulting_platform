@@ -10,6 +10,7 @@ class Specialize extends Model
         'name',
         'description',
         'certificate',
+        'price',
         'user_id',
         'category_id'
     ];

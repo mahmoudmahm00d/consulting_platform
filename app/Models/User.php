@@ -4,8 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -40,6 +38,11 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+        "email_verified_at",
+        "created_at",
+        "updated_at",
+        "deleted_at",
+        'roles'
     ];
 
     /**
@@ -53,19 +56,34 @@ class User extends Authenticatable implements JWTSubject
 
     public function specializes()
     {
-        return $this->hasMany(Specialize::class);
+        return $this->hasMany(Specialize::class, 'user_id', 'id');
+    }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class, 'user_id', 'id');
     }
 
     public function contacts()
     {
-        return $this->hasMany(ContactInfo::class);
+        return $this->hasMany(ContactInfo::class, 'user_id', 'id');
     }
 
-    public function schedules()
+    public function schedule()
     {
-        return $this->hasMany(Schedule::class);
+        return $this->hasMany(Schedule::class, 'user_id', 'id');
     }
-    
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'specializes', 'user_id');
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class, 'specialist_id');
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Schedule extends Model
+class Wallet extends Model
 {
+    use HasFactory;
     protected $fillable = [
+        'amount',
         'user_id',
-        'day',
-        'from',
-        'to',
     ];
 
     public function user()
@@ -18,8 +18,8 @@ class Schedule extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function appointments()
+    public function transactions()
     {
-        return $this->hasMany(Appointment::class);
+        $this->hasMany(Transaction::class);
     }
 }
