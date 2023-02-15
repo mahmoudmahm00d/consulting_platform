@@ -2,7 +2,7 @@
 
 @section('content')
     <h3>Edit category</h3>
-    <form action="/categories/{{ $category->id }}" method="post" class="col-md-6 needs-validation" novalidate>
+    <form action="/categories/{{ $category->id }}" enctype="multipart/form-data" method="post" class="col-md-6 needs-validation" novalidate>
         @method('PUT')
         @csrf
         <div class="mb-3">
@@ -15,31 +15,33 @@
         </div>
         <div class="mb-3">
             <label for="sequence" class="form-label">Sequence</label>
-            <input type="number" class="form-control" name="sequence" id="sequence" placeholder="Sequance" required>
+            <input type="number" class="form-control" name="sequence" id="sequence" placeholder="Sequance"
+                value="{{ $category->sequence }}" required>
             @error('sequence')
                 <p class="text-red text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>
         <div class="mb-3">
             <label for="image" class="form-label">Image</label>
-            <input type="file" placeholder="Choose image" class="form-control" accept=".jpg, .png" name="image" id="image"/>
+            <input type="file" placeholder="Choose image" class="form-control" accept=".jpg, .png" name="image"
+                id="image" />
             @error('image')
                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>
         @if ($category->image)
-        <div class="mb-3">
-            <img class="img-fluid rounded-top card" width="256" src="{{ asset('storage/' . $category->image)}}" />
-        </div>
+            <div class="mb-3">
+                <img class="img-fluid rounded-top card" width="256" src="{{ asset('storage/' . $category->image) }}" />
+            </div>
         @endif
         <button type="submit" class="btn btn-primary">Edit</button>
     </form>
     <hr>
     <p>
-        <a href="{{url('/categories')}}" class="link">Back to list</a>
+        <a href="{{ url('/categories') }}" class="link">Back to list</a>
     </p>
 @endsection
 
 @section('scripts')
-<x-validation-scripts></x-validation-scripts>
+    <x-validation-scripts></x-validation-scripts>
 @endsection
