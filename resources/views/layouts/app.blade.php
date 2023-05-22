@@ -6,10 +6,13 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="stylesheet" href="{{asset('libs/bootstrap/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/app.css')}}">
+    {{-- <link rel="stylesheet" href="{{asset('libs/bootstrap/css/bootstrap.min.css')}}"> --}}
+    {{-- <link rel="stylesheet" href="{{asset('css/app.css')}}"> --}}
+    <link rel="stylesheet" href="{{asset('libs/keentheme/css/style.bundle.css')}}">
+    <link rel="stylesheet" href="{{asset('libs/keentheme/plugins/global/plugins.bundle.css')}}">
     <!-- Scripts -->
-    <script src="{{asset('libs/bootstrap/js/bootstrap.bundle.min.js')}}" defer></script>
+    {{-- <script src="{{asset('libs/bootstrap/js/bootstrap.bundle.min.js')}}" defer></script> --}}
+    @yield('styles')
 </head>
 <body>
     <div id="app">
@@ -47,6 +50,8 @@
             @yield('content')
         </main>
     </div>
+    <script src="{{asset('libs/keentheme/js/scripts.bundle.js')}}"></script>
+    <script src="{{asset('libs/keentheme/plugins/global/plugins.bundle.js')}}"></script>
     @yield('scripts')
 </body>
 </html>

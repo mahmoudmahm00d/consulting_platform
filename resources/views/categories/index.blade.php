@@ -1,14 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<p>
-    <a href="/categories/create" class="btn btn-primary">Create</a>
-</p>
-<div class="table-responsive">
-    <table
-        class="table table-hover table-bordered align-middle">
+    <p>
+        <a href="/categories/create" class="btn btn-primary btn-sm rounded-2">Create</a>
+    </p>
+    <x-datatable>
         <thead class="table-light">
-            <caption>Categories</caption>
             <tr>
                 <th class="col-8">Name</th>
                 <th class="col-4">Actions</th>
@@ -19,17 +16,17 @@
                 <tr>
                     <td scope="row">{{ $category->name }}</td>
                     <td class="d-flex">
-                        <a href="/categories/{{ $category->id }}/edit" class="btn btn-outline-primary">Edit</a> &nbsp; |
-                        &nbsp;
+                        <a href="/categories/{{ $category->id }}/edit" class="btn btn-link btn-sm rounded-2">Edit</a>
+                        &nbsp;&nbsp;
                         <form action="{{ url('/categories/' . $category->id) }}" method="post">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" onclick="return confirm('Delete {{$category->name}} category?')" class="btn btn-outline-danger">Delete</button>
+                            <button type="submit" onclick="return confirm('Delete {{ $category->name }} category?')"
+                                class="btn btn-link text-danger btn-sm rounded-2">Delete</button>
                         </form>
                     </td>
                 </tr>
             @endforeach
         </tbody>
-    </table>
-</div>
+    </x-datatable>
 @endsection
